@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import RuralProducerController from './rural-producer/Presentation/Controllers/rural-producer.controller';
+import RuralProducerController from './rural-producer/presentation/controllers/rural-producer.controller';
 
 @Module({
   imports: [],
