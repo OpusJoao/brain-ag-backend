@@ -1,23 +1,13 @@
-import { DataSource } from 'typeorm';
-import RuralProducerEntity from '../rural-producer/domain/entities/rural-producer.entity';
-import PlantedCropsEntity from '../planted-crops/domain/entities/planted-crop.entity';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import databaseConfig from '../shared/domain/config/database.config';
 
 export const DATA_SOURCE = 'DATA_SOURCE';
 export const databaseProviders = [
   {
     provide: DATA_SOURCE,
     useFactory: async () => {
-      const dataSource = new DataSource({
-        type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'root',
-        password: 'root',
-        database: 'test',
-        entities: [RuralProducerEntity, PlantedCropsEntity],
-        synchronize: true,
-      });
-
+      const dataSourceOptions: DataSourceOptions = databaseConfig();
+      const dataSource = new DataSource(dataSourceOptions);
       return dataSource.initialize();
     },
   },
