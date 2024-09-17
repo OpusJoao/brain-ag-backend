@@ -10,15 +10,16 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import BodyCreateRuralProducerDto from '../dtos/body-create-rural-producer.dto';
 import BodyUpdateRuralProducerDto from '../dtos/body-update-rural-producer.dto';
+import RuralProducerService from '../../application/services/rural-producer.service';
 
 @ApiTags('Produtor Rural')
 @Controller('rural-producer')
 export default class RuralProducerController {
-  constructor() {}
+  constructor(private readonly ruralProducerService: RuralProducerService) {}
 
   @Get('/:id')
   showRuralProducers(@Param('id') id: number) {
-    return id;
+    return this.ruralProducerService.getRuralProducer(id);
   }
 
   @Post('/')
