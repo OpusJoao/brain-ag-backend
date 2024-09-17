@@ -7,10 +7,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import RuralProducerEntity from './rural-producer.entity';
+import RuralProducerEntity from '../../../rural-producer/domain/entities/rural-producer.entity';
 
 @Entity({ name: 'planted_crops' })
-export default class PlantedCropsEntity {
+export default class PlantedCropEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import RuralProducerEntity from '../rural-producer/domain/entities/rural-producer.entity';
-import PlantedCropsEntity from '../rural-producer/domain/entities/planted-crops.entity';
+import PlantedCropsEntity from '../planted-crops/domain/entities/planted-crop.entity';
 
 export const DATA_SOURCE = 'DATA_SOURCE';
 export const databaseProviders = [
