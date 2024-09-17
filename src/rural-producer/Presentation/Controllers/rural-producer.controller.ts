@@ -19,14 +19,14 @@ export default class RuralProducerController {
 
   @Get('/:id')
   showRuralProducers(@Param('id') id: number) {
-    return this.ruralProducerService.getRuralProducer(id);
+    return this.ruralProducerService.get(id);
   }
 
   @Post('/')
   createRuralProducer(
     @Body() createRuralProducerDto: BodyCreateRuralProducerDto,
   ) {
-    return createRuralProducerDto;
+    return this.ruralProducerService.create(createRuralProducerDto);
   }
 
   @Delete('/:id')
