@@ -21,7 +21,9 @@ export default class RuralProducerEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({
+    name: 'farm_name',
+  })
   farmName: string;
 
   @Column()
@@ -30,13 +32,19 @@ export default class RuralProducerEntity {
   @Column()
   state: string;
 
-  @Column()
+  @Column({
+    name: 'total_area',
+  })
   totalArea: number;
 
-  @Column()
+  @Column({
+    name: 'agricultural_area',
+  })
   agriculturalArea: number;
 
-  @Column()
+  @Column({
+    name: 'vegetation_area',
+  })
   vegetationArea: number;
 
   @ManyToMany(() => PlantedCropsEntity)

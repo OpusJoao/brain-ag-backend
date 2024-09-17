@@ -67,4 +67,21 @@ export default class RuralProducerRepository {
   ) {
     return await this.repository.update({ id }, ruralProducer);
   }
+
+  async getViewDashboard() {
+    const query = `
+      SELECT 
+        count(rp.id) as total_of_farm_in_quantity, 
+        sum(rp.total_area) as total_of_farm_in_hectares 
+      FROM rural_producers AS rp
+      WHERE rp.deleted_at IS NULL
+    `;
+
+    const result = await this.repository.query(query);
+    console.log(result);
+    return {
+      totalOfFarmInQuantity: result[0].total_of_farm_in_quantity,
+      totalOfFarmInHectares: result[0].total_of_farm_in_hectares,
+    };
+  }
 }

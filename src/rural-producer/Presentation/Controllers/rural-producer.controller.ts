@@ -14,8 +14,8 @@ import BodyUpdateRuralProducerDto from '../dtos/body-update-rural-producer.dto';
 import RuralProducerService from '../../application/services/rural-producer.service';
 import ValidationBrDocumentService from '../../../utils/application/services/validation-br-document.service';
 import InvalidDocumentException from '../exceptions/invalid-document.exception';
-import ControllerResponseInterface from '../interfaces/controller-response.interface';
 import NullIdException from '../exceptions/null-id.exception';
+import ControllerResponseInterface from '../../../shared/presentation/interfaces/controller-response.interface';
 
 @ApiTags('Produtor Rural')
 @Controller('rural-producer')
@@ -26,10 +26,19 @@ export default class RuralProducerController {
   ) {}
 
   @Get('/:id')
-  async showRuralProducers(
+  async getRuralProducer(
     @Param('id') id: number,
   ): Promise<ControllerResponseInterface> {
     const ruralProducers = await this.ruralProducerService.get(id);
+    return {
+      status: HttpStatus.OK,
+      data: ruralProducers,
+    };
+  }
+
+  @Get('/')
+  async showRuralProducers(): Promise<ControllerResponseInterface> {
+    const ruralProducers = await this.ruralProducerService.get();
     return {
       status: HttpStatus.OK,
       data: ruralProducers,
@@ -75,7 +84,11 @@ export default class RuralProducerController {
     @Param('id') id: number,
     @Body() updateRuralProducerDto: BodyUpdateRuralProducerDto,
   ): Promise<ControllerResponseInterface> {
-    this.validateDocument(updateRuralProducerDto.document);
+    if (
+      updateRuralProducerDto.document &&
+      updateRuralProducerDto?.document != ''
+    )
+      this.validateDocument(updateRuralProducerDto.document);
 
     const wasUpdated = await this.ruralProducerService.update(
       id,

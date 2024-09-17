@@ -8,6 +8,7 @@ import PlantedCropEntity from '../../../planted-crops/domain/entities/planted-cr
 import CreateRuralProducerInterface from '../../domain/interfaces/create-rural-producer.interface';
 import PlantedCropService from '../../../planted-crops/application/services/planted-crop.service';
 import { PlantedCropsEnum } from '../../domain/enums/planted-crops.enum';
+import RuralProducerNotExistsException from '../../presentation/exceptions/rural-producer-not-exists.exception';
 
 @Injectable()
 export default class RuralProducerService {
@@ -15,7 +16,7 @@ export default class RuralProducerService {
     private readonly ruralProducerRepository: RuralProducerRepository,
     private readonly plantedCropsService: PlantedCropService,
   ) {}
-  async get(id: number) {
+  async get(id?: number) {
     const ruralProducers =
       await this.ruralProducerRepository.getRuralProducer(id);
 
@@ -63,7 +64,10 @@ export default class RuralProducerService {
     return wasDeleted;
   }
 
-  async update(id: number, ruralProducer: BodyUpdateRuralProducerDto) {
+  async update(
+    id: number,
+    ruralProducer: BodyUpdateRuralProducerDto,
+  ): Promise<boolean> {
     const ruralProducerFound = await this.get(id);
 
     if (
@@ -79,13 +83,26 @@ export default class RuralProducerService {
     )
       throw new InvalidTotalAreaException();
 
-    if (ruralProducerFound.length < 1) throw new Error('');
+    if (ruralProducerFound.length < 1)
+      throw new RuralProducerNotExistsException();
+
+    let plantedCrops: PlantedCropEntity[] = [];
+    if (ruralProducer?.plantedCrops?.length > 0) {
+      const plantedCropsToSave: PlantedCropsEnum[] = [];
+      for (const plantedCrop of ruralProducer.plantedCrops) {
+        plantedCropsToSave.push(PlantedCropsEnum[plantedCrop]);
+      }
+
+      plantedCrops =
+        await this.plantedCropsService.getByIds(plantedCropsToSave);
+    }
+
     return (
       (
-        await this.ruralProducerRepository.updateRuralProducer(
-          id,
-          ruralProducer,
-        )
+        await this.ruralProducerRepository.updateRuralProducer(id, {
+          ...ruralProducer,
+          plantedCrops: plantedCrops?.length > 0 ? plantedCrops : undefined,
+        })
       ).affected > 0
     );
   }
