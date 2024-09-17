@@ -20,4 +20,14 @@ export default class RuralProducerService {
 
     return ruralProducerCreated;
   }
+
+  async delete(id: number) {
+    let wasDeleted = false;
+    const ruralProducer = await this.get(id);
+    console.log(ruralProducer);
+    if (ruralProducer.length < 1) return wasDeleted;
+    wasDeleted =
+      (await this.ruralProducerRepository.deleteRuralProducer(id)).affected > 0;
+    return wasDeleted;
+  }
 }

@@ -35,7 +35,15 @@ export default class RuralProducerRepository {
     ruralProducerToBecreated.state = ruralProducer.state;
     ruralProducerToBecreated.vegetationArea = ruralProducer.vegetationArea;
     ruralProducerToBecreated.totalArea = ruralProducer.totalArea;
+    ruralProducerToBecreated.createdAt = new Date();
+    ruralProducerToBecreated.updatedAt = new Date();
 
     return await this.repository.save(ruralProducerToBecreated);
+  }
+
+  async deleteRuralProducer(id: number) {
+    return await this.repository.softDelete({
+      id,
+    });
   }
 }

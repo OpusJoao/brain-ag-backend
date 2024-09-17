@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ name: 'rural_producers' })
 export default class RuralProducerEntity {
@@ -28,4 +35,13 @@ export default class RuralProducerEntity {
 
   @Column()
   vegetationArea: number;
+
+  @DeleteDateColumn({ name: 'deleted_at' })
+  public deletedAt?: Date;
+
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  public createdAt!: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  public updatedAt!: Date;
 }

@@ -30,9 +30,11 @@ export default class RuralProducerController {
   }
 
   @Delete('/:id')
-  deleteRuralProducer(@Param('id') id: number) {
+  async deleteRuralProducer(@Param('id') id: number) {
     if (isNaN(id)) return false;
-    return id;
+    const wasDeleted = await this.ruralProducerService.delete(id);
+    if (wasDeleted) return 'usuario removido com sucesso';
+    else return 'Usuario n pode ser deletado';
   }
 
   @Put('/:id')
