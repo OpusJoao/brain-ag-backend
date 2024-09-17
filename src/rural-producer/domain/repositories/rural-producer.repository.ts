@@ -82,7 +82,6 @@ export default class RuralProducerRepository {
     `;
 
     const result = await this.repository.query(query);
-    console.log(result);
     return {
       totalOfFarmInQuantity: result[0].total_of_farm_in_quantity,
       totalOfFarmInHectares: result[0].total_of_farm_in_hectares,
