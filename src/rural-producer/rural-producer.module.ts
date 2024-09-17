@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import RuralProducerController from './presentation/controllers/rural-producer.controller';
 import { ruralProducerProviders } from './rural-producer.providers';
 import { DatabaseModule } from '../database/database.module';
+import UtilsModule from '../utils/utils.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, UtilsModule],
   controllers: [RuralProducerController],
   providers: [...ruralProducerProviders],
   exports: [...ruralProducerProviders],

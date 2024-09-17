@@ -11,11 +11,15 @@ import { ApiTags } from '@nestjs/swagger';
 import BodyCreateRuralProducerDto from '../dtos/body-create-rural-producer.dto';
 import BodyUpdateRuralProducerDto from '../dtos/body-update-rural-producer.dto';
 import RuralProducerService from '../../application/services/rural-producer.service';
+import ValidationBrDocumentService from '../../../utils/application/services/validation-br-document.service';
 
 @ApiTags('Produtor Rural')
 @Controller('rural-producer')
 export default class RuralProducerController {
-  constructor(private readonly ruralProducerService: RuralProducerService) {}
+  constructor(
+    private readonly ruralProducerService: RuralProducerService,
+    private readonly validateDocumentService: ValidationBrDocumentService,
+  ) {}
 
   @Get('/:id')
   showRuralProducers(@Param('id') id: number) {
@@ -26,6 +30,13 @@ export default class RuralProducerController {
   createRuralProducer(
     @Body() createRuralProducerDto: BodyCreateRuralProducerDto,
   ) {
+    if (
+      !this.validateDocumentService.isValidDocument(
+        createRuralProducerDto.document,
+      )
+    ) {
+      throw new Error('Documento inválido');
+    }
     return this.ruralProducerService.create(createRuralProducerDto);
   }
 
@@ -38,10 +49,15 @@ export default class RuralProducerController {
   }
 
   @Put('/:id')
-  updateRuralProducer(
+  async updateRuralProducer(
     @Param('id') id: number,
     @Body() updateRuralProducerDto: BodyUpdateRuralProducerDto,
   ) {
-    return { id, ...updateRuralProducerDto };
+    const wasUpdated = await this.ruralProducerService.update(
+      id,
+      updateRuralProducerDto,
+    );
+    if (wasUpdated) return 'usuario editado com sucesso';
+    else return 'Usuario n pode ser editado';
   }
 }

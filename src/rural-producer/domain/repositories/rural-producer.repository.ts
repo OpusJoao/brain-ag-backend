@@ -4,6 +4,7 @@ import { Inject } from '@nestjs/common';
 import { GetRuralProducerResponseRepositoryInterface } from '../interfaces/get-rural-producer-response-repository.interface';
 import BodyCreateRuralProducerDto from '../../presentation/dtos/body-create-rural-producer.dto';
 import { CreateRuralProducerResponseRepositoryInterface } from '../interfaces/create-rural-producer-response-repository.interface';
+import BodyUpdateRuralProducerDto from '../../presentation/dtos/body-update-rural-producer.dto';
 
 export const RURAL_PRODUCER_REPOSITORY = 'RURAL_PRODUCER_REPOSITORY';
 export default class RuralProducerRepository {
@@ -45,5 +46,12 @@ export default class RuralProducerRepository {
     return await this.repository.softDelete({
       id,
     });
+  }
+
+  async updateRuralProducer(
+    id: number,
+    ruralProducer: BodyUpdateRuralProducerDto,
+  ) {
+    return await this.repository.update({ id }, ruralProducer);
   }
 }

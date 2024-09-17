@@ -4,7 +4,7 @@ import { PlantedCropsEnum } from '../../domain/enums/planted-crops.enum';
 
 export default class BodyCreateRuralProducerDto {
   @ApiProperty({
-    description: 'Documento do produtor rural',
+    description: 'Documento do produtor rural (CPF ou CNPJ)',
     type: String,
     required: true,
   })
