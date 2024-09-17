@@ -10,7 +10,7 @@ export default class BodyUpdateRuralProducerDto {
   })
   @IsString()
   @IsOptional()
-  readonly document: string;
+  readonly document?: string;
 
   @ApiProperty({
     description: 'Nome do produtor rural',
@@ -19,7 +19,7 @@ export default class BodyUpdateRuralProducerDto {
   })
   @IsString()
   @IsOptional()
-  readonly name: string;
+  readonly name?: string;
 
   @ApiProperty({
     description: 'Nome da fazenda',
@@ -28,7 +28,7 @@ export default class BodyUpdateRuralProducerDto {
   })
   @IsString()
   @IsOptional()
-  readonly farmName: string;
+  readonly farmName?: string;
 
   @ApiProperty({
     description: 'Cidade',
@@ -37,7 +37,7 @@ export default class BodyUpdateRuralProducerDto {
   })
   @IsString()
   @IsOptional()
-  readonly city: string;
+  readonly city?: string;
 
   @ApiProperty({
     description: 'Estado',
@@ -46,7 +46,7 @@ export default class BodyUpdateRuralProducerDto {
   })
   @IsString()
   @IsOptional()
-  readonly state: string;
+  readonly state?: string;
 
   @ApiProperty({
     description: 'Área total em hectares da fazenda',
@@ -55,7 +55,7 @@ export default class BodyUpdateRuralProducerDto {
   })
   @IsNumber()
   @IsOptional()
-  readonly totalArea: number;
+  readonly totalArea?: number;
 
   @ApiProperty({
     description: 'Área agricultável em hectares',
@@ -64,7 +64,7 @@ export default class BodyUpdateRuralProducerDto {
   })
   @IsNumber()
   @IsOptional()
-  readonly agriculturalArea: number;
+  readonly agriculturalArea?: number;
 
   @ApiProperty({
     description: 'Área de vegetação em hectares',
@@ -73,7 +73,7 @@ export default class BodyUpdateRuralProducerDto {
   })
   @IsNumber()
   @IsOptional()
-  readonly vegetationArea: number;
+  readonly vegetationArea?: number;
 
   @ApiProperty({
     description: 'Culturas plantadas',

@@ -17,7 +17,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "check": "export TZ=America/Sao_Paulo && eslint \"{src,apps,libs,test}/**/*.ts\" && jest --verbose --maxWorkers=2 --coverage"
+
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -63,15 +65,21 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "testRegex": ".*\\.test\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "src/**/application/**/*.(t|j)s",
+      "!src/**/application/(exceptions|contracts)/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coverageDirectory": "./coverage",
+    "coverageThreshold": {
+      "global": {
+        "lines": 100
+      }
+    },
+    "testEnvironment": "node",
+    "testTimeout": 10000
   }
 }
