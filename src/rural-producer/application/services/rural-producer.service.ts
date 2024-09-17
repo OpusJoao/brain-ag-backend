@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import RuralProducerRepository from '../../domain/repositories/rural-producer.repository';
 import BodyCreateRuralProducerDto from '../../presentation/dtos/body-create-rural-producer.dto';
 import BodyUpdateRuralProducerDto from '../../presentation/dtos/body-update-rural-producer.dto';
+import RuralProducerAlreadyExistsException from '../../presentation/exceptions/rural-producer-already-exists.exception';
+import InvalidTotalAreaException from '../../presentation/exceptions/invalid-total-area.exception';
 
 @Injectable()
 export default class RuralProducerService {
@@ -16,8 +18,15 @@ export default class RuralProducerService {
   }
 
   async create(ruralProducer: BodyCreateRuralProducerDto) {
-    if (this.isNotValidTotalArea(ruralProducer)) throw new Error('Area maior');
-
+    if (this.isNotValidTotalArea(ruralProducer))
+      throw new InvalidTotalAreaException();
+    const ruralProducerFound =
+      await this.ruralProducerRepository.getRuralProducerByDocument(
+        ruralProducer.document,
+      );
+    if (ruralProducerFound?.id) {
+      throw new RuralProducerAlreadyExistsException();
+    }
     const ruralProducerCreated =
       await this.ruralProducerRepository.createRuralProducer(ruralProducer);
 

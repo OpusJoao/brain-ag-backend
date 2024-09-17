@@ -16,10 +16,18 @@ export default class RuralProducerRepository {
     id?: number,
   ): Promise<GetRuralProducerResponseRepositoryInterface[]> {
     if (id == null) {
-      this.repository.find();
+      return this.repository.find();
     }
     return this.repository.findBy({
       id: id,
+    });
+  }
+
+  getRuralProducerByDocument(
+    document?: string,
+  ): Promise<GetRuralProducerResponseRepositoryInterface> {
+    return this.repository.findOneBy({
+      document,
     });
   }
 

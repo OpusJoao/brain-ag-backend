@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -12,6 +13,9 @@ import BodyCreateRuralProducerDto from '../dtos/body-create-rural-producer.dto';
 import BodyUpdateRuralProducerDto from '../dtos/body-update-rural-producer.dto';
 import RuralProducerService from '../../application/services/rural-producer.service';
 import ValidationBrDocumentService from '../../../utils/application/services/validation-br-document.service';
+import InvalidDocumentException from '../exceptions/invalid-document.exception';
+import ControllerResponseInterface from '../interfaces/controller-response.interface';
+import NullIdException from '../exceptions/null-id.exception';
 
 @ApiTags('Produtor Rural')
 @Controller('rural-producer')
@@ -22,42 +26,78 @@ export default class RuralProducerController {
   ) {}
 
   @Get('/:id')
-  showRuralProducers(@Param('id') id: number) {
-    return this.ruralProducerService.get(id);
+  async showRuralProducers(
+    @Param('id') id: number,
+  ): Promise<ControllerResponseInterface> {
+    const ruralProducers = await this.ruralProducerService.get(id);
+    return {
+      status: HttpStatus.OK,
+      data: ruralProducers,
+    };
   }
 
   @Post('/')
-  createRuralProducer(
+  async createRuralProducer(
     @Body() createRuralProducerDto: BodyCreateRuralProducerDto,
-  ) {
-    if (
-      !this.validateDocumentService.isValidDocument(
-        createRuralProducerDto.document,
-      )
-    ) {
-      throw new Error('Documento inválido');
-    }
-    return this.ruralProducerService.create(createRuralProducerDto);
+  ): Promise<ControllerResponseInterface> {
+    this.validateDocument(createRuralProducerDto.document);
+    const ruralProducerCreated = await this.ruralProducerService.create(
+      createRuralProducerDto,
+    );
+    return {
+      status: HttpStatus.CREATED,
+      data: ruralProducerCreated,
+    };
   }
 
   @Delete('/:id')
-  async deleteRuralProducer(@Param('id') id: number) {
-    if (isNaN(id)) return false;
+  async deleteRuralProducer(
+    @Param('id') id: number,
+  ): Promise<ControllerResponseInterface> {
+    if (isNaN(id)) throw new NullIdException();
     const wasDeleted = await this.ruralProducerService.delete(id);
-    if (wasDeleted) return 'usuario removido com sucesso';
-    else return 'Usuario n pode ser deletado';
+    if (wasDeleted)
+      return {
+        status: HttpStatus.OK,
+        message: 'Produtor rural deletado com sucesso!',
+        data: [],
+      };
+    else
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Produtor rural não foi deletado com sucesso.',
+        data: [],
+      };
   }
 
   @Put('/:id')
   async updateRuralProducer(
     @Param('id') id: number,
     @Body() updateRuralProducerDto: BodyUpdateRuralProducerDto,
-  ) {
+  ): Promise<ControllerResponseInterface> {
+    this.validateDocument(updateRuralProducerDto.document);
+
     const wasUpdated = await this.ruralProducerService.update(
       id,
       updateRuralProducerDto,
     );
-    if (wasUpdated) return 'usuario editado com sucesso';
-    else return 'Usuario n pode ser editado';
+    if (wasUpdated)
+      return {
+        status: HttpStatus.OK,
+        message: 'Produtor rural editado com sucesso!',
+        data: [],
+      };
+    else
+      return {
+        status: HttpStatus.OK,
+        message: 'Produtor rural não foi editado com sucesso.',
+        data: [],
+      };
+  }
+
+  private validateDocument(document: string) {
+    if (!this.validateDocumentService.isValidDocument(document)) {
+      throw new InvalidDocumentException();
+    }
   }
 }
