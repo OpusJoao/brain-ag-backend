@@ -69,22 +69,21 @@ export default class RuralProducerService {
     ruralProducer: BodyUpdateRuralProducerDto,
   ): Promise<boolean> {
     const ruralProducerFound = await this.get(id);
+    if (ruralProducerFound.length < 1)
+      throw new RuralProducerNotExistsException();
 
     if (
       this.isNotValidTotalArea({
         ...ruralProducerFound[0],
         agriculturalArea:
-          ruralProducer.agriculturalArea ||
+          ruralProducer?.agriculturalArea ||
           ruralProducerFound[0].agriculturalArea,
-        totalArea: ruralProducer.totalArea || ruralProducerFound[0].totalArea,
+        totalArea: ruralProducer?.totalArea || ruralProducerFound[0].totalArea,
         vegetationArea:
-          ruralProducer.vegetationArea || ruralProducerFound[0].vegetationArea,
+          ruralProducer?.vegetationArea || ruralProducerFound[0].vegetationArea,
       })
     )
       throw new InvalidTotalAreaException();
-
-    if (ruralProducerFound.length < 1)
-      throw new RuralProducerNotExistsException();
 
     let plantedCrops: PlantedCropEntity[] = [];
     if (ruralProducer?.plantedCrops?.length > 0) {
@@ -103,7 +102,7 @@ export default class RuralProducerService {
           ...ruralProducer,
           plantedCrops: plantedCrops?.length > 0 ? plantedCrops : undefined,
         })
-      ).affected > 0
+      )?.id > 0
     );
   }
 

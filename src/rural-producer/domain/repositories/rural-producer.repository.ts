@@ -65,7 +65,11 @@ export default class RuralProducerRepository {
     id: number,
     ruralProducer: UpdateRuralProducerInterface,
   ) {
-    return await this.repository.update({ id }, ruralProducer);
+    const ruralProducerFound = await this.repository.findOneBy({ id });
+
+    Object.assign(ruralProducerFound, ruralProducer);
+
+    return await this.repository.save(ruralProducerFound);
   }
 
   async getViewDashboard() {
