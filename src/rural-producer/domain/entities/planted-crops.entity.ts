@@ -7,42 +7,21 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import PlantedCropsEntity from './planted-crops.entity';
+import RuralProducerEntity from './rural-producer.entity';
 
-@Entity({ name: 'rural_producers' })
-export default class RuralProducerEntity {
+@Entity({ name: 'planted_crops' })
+export default class PlantedCropsEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  document: string;
-
-  @Column()
   name: string;
 
-  @Column()
-  farmName: string;
-
-  @Column()
-  city: string;
-
-  @Column()
-  state: string;
-
-  @Column()
-  totalArea: number;
-
-  @Column()
-  agriculturalArea: number;
-
-  @Column()
-  vegetationArea: number;
-
   @ManyToMany(
-    () => PlantedCropsEntity,
-    (plantedCrops) => plantedCrops.ruralProducer,
+    () => RuralProducerEntity,
+    (ruralProducer) => ruralProducer.plantedCrops,
   )
-  plantedCrops: PlantedCropsEntity[];
+  ruralProducer: RuralProducerEntity;
 
   @DeleteDateColumn({ name: 'deleted_at' })
   public deletedAt?: Date;

@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import RuralProducerEntity from '../rural-producer/domain/entities/rural-producer.entity';
+import PlantedCropsEntity from '../rural-producer/domain/entities/planted-crops.entity';
 
 export const DATA_SOURCE = 'DATA_SOURCE';
 export const databaseProviders = [
@@ -13,7 +14,7 @@ export const databaseProviders = [
         username: 'root',
         password: 'root',
         database: 'test',
-        entities: [RuralProducerEntity],
+        entities: [RuralProducerEntity, PlantedCropsEntity],
         synchronize: true,
       });
 
