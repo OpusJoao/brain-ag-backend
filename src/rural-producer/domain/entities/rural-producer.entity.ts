@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -38,10 +39,8 @@ export default class RuralProducerEntity {
   @Column()
   vegetationArea: number;
 
-  @ManyToMany(
-    () => PlantedCropsEntity,
-    (plantedCrops) => plantedCrops.ruralProducer,
-  )
+  @ManyToMany(() => PlantedCropsEntity)
+  @JoinTable()
   plantedCrops: PlantedCropsEntity[];
 
   @DeleteDateColumn({ name: 'deleted_at' })

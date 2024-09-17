@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { PlantedCropsEnum } from '../../domain/enums/planted-crops.enum';
+import { PlantedCropsFullEnum } from '../../domain/enums/planted-crops.enum';
 
 export default class BodyCreateRuralProducerDto {
   @ApiProperty({
@@ -70,9 +70,9 @@ export default class BodyCreateRuralProducerDto {
   @ApiProperty({
     description: 'Culturas plantadas',
     required: true,
-    enum: PlantedCropsEnum,
+    enum: PlantedCropsFullEnum,
     isArray: true,
   })
-  @IsEnum(PlantedCropsEnum, { each: true })
-  readonly plantedCrops: PlantedCropsEnum[];
+  @IsEnum(PlantedCropsFullEnum, { each: true })
+  readonly plantedCrops: PlantedCropsFullEnum[];
 }

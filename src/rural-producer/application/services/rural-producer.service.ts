@@ -4,11 +4,16 @@ import BodyCreateRuralProducerDto from '../../presentation/dtos/body-create-rura
 import BodyUpdateRuralProducerDto from '../../presentation/dtos/body-update-rural-producer.dto';
 import RuralProducerAlreadyExistsException from '../../presentation/exceptions/rural-producer-already-exists.exception';
 import InvalidTotalAreaException from '../../presentation/exceptions/invalid-total-area.exception';
+import PlantedCropEntity from '../../../planted-crops/domain/entities/planted-crop.entity';
+import CreateRuralProducerInterface from '../../domain/interfaces/create-rural-producer.interface';
+import PlantedCropService from '../../../planted-crops/application/services/planted-crop.service';
+import { PlantedCropsEnum } from '../../domain/enums/planted-crops.enum';
 
 @Injectable()
 export default class RuralProducerService {
   constructor(
     private readonly ruralProducerRepository: RuralProducerRepository,
+    private readonly plantedCropsService: PlantedCropService,
   ) {}
   async get(id: number) {
     const ruralProducers =
@@ -27,8 +32,24 @@ export default class RuralProducerService {
     if (ruralProducerFound?.id) {
       throw new RuralProducerAlreadyExistsException();
     }
+
+    const plantedCropsToSave: PlantedCropsEnum[] = [];
+    for (const plantedCrop of ruralProducer.plantedCrops) {
+      plantedCropsToSave.push(PlantedCropsEnum[plantedCrop]);
+    }
+
+    const plantedCrops: PlantedCropEntity[] =
+      await this.plantedCropsService.getByIds(plantedCropsToSave);
+
+    const ruralProducerToCreate: CreateRuralProducerInterface = {
+      ...ruralProducer,
+      plantedCrops: plantedCrops,
+    };
+
     const ruralProducerCreated =
-      await this.ruralProducerRepository.createRuralProducer(ruralProducer);
+      await this.ruralProducerRepository.createRuralProducer(
+        ruralProducerToCreate,
+      );
 
     return ruralProducerCreated;
   }
@@ -56,7 +77,7 @@ export default class RuralProducerService {
           ruralProducer.vegetationArea || ruralProducerFound[0].vegetationArea,
       })
     )
-      throw new Error('Area maior');
+      throw new InvalidTotalAreaException();
 
     if (ruralProducerFound.length < 1) throw new Error('');
     return (

@@ -2,9 +2,9 @@ import { Repository } from 'typeorm';
 import RuralProducerEntity from '../entities/rural-producer.entity';
 import { Inject } from '@nestjs/common';
 import { GetRuralProducerResponseRepositoryInterface } from '../interfaces/get-rural-producer-response-repository.interface';
-import BodyCreateRuralProducerDto from '../../presentation/dtos/body-create-rural-producer.dto';
 import { CreateRuralProducerResponseRepositoryInterface } from '../interfaces/create-rural-producer-response-repository.interface';
 import UpdateRuralProducerInterface from '../interfaces/update-rural-producer.interface';
+import CreateRuralProducerInterface from '../interfaces/create-rural-producer.interface';
 
 export const RURAL_PRODUCER_REPOSITORY = 'RURAL_PRODUCER_REPOSITORY';
 export default class RuralProducerRepository {
@@ -16,7 +16,11 @@ export default class RuralProducerRepository {
     id?: number,
   ): Promise<GetRuralProducerResponseRepositoryInterface[]> {
     if (id == null) {
-      return this.repository.find();
+      return this.repository.find({
+        relations: {
+          plantedCrops: true,
+        },
+      });
     }
     return this.repository.findBy({
       id: id,
@@ -32,7 +36,7 @@ export default class RuralProducerRepository {
   }
 
   async createRuralProducer(
-    ruralProducer: BodyCreateRuralProducerDto,
+    ruralProducer: CreateRuralProducerInterface,
   ): Promise<CreateRuralProducerResponseRepositoryInterface> {
     const ruralProducerToBecreated = new RuralProducerEntity();
 
@@ -46,6 +50,7 @@ export default class RuralProducerRepository {
     ruralProducerToBecreated.totalArea = ruralProducer.totalArea;
     ruralProducerToBecreated.createdAt = new Date();
     ruralProducerToBecreated.updatedAt = new Date();
+    ruralProducerToBecreated.plantedCrops = ruralProducer.plantedCrops;
 
     return await this.repository.save(ruralProducerToBecreated);
   }
