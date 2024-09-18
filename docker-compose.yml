@@ -2,16 +2,33 @@ version: '3.8'
 
 services:
   app:
-      image: node:18
-      container_name: node_app
-      working_dir: /usr/src/app
-      volumes:
-        - .:/usr/src/app
-      ports:
-        - "3000:3000"
-      command: ["npm", "run", "start:dev"]
-      env_file:
+    image: node:18
+    container_name: node_app
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000:3000"
+    command: ["npm", "run", "start:dev"]
+    env_file:
       - ./.env.development
+    depends_on:
+      - postgres
+      - migrate
+
+  migrate:
+    image: node:18
+    container_name: node_migrate
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    command: ["npm", "run", "typeorm", "migration:run"]
+    env_file:
+      - ./.env.development
+    depends_on:
+      - postgres
+    entrypoint: ["sh", "-c", "npm run typeorm:migrations && exit 0"]
+
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -20,7 +37,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: test
     ports:
-      - "5432:5432" # O padrão do PostgreSQL é a porta 5432
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:

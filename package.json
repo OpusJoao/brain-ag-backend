@@ -18,7 +18,12 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "check": "export TZ=America/Sao_Paulo && eslint \"{src,apps,libs,test}/**/*.ts\" && jest --verbose --maxWorkers=2 --coverage"
+    "check": "export TZ=America/Sao_Paulo && eslint \"{src,apps,libs,test}/**/*.ts\" && jest --verbose --maxWorkers=2 --coverage",
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
+    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
+    "typeorm:migrations": "npm run typeorm:cli -- migration:run -d ./src/database/data-source-migration.ts",
+    "typeorm:generate": "npm run typeorm:cli -- migration:generate ./src/database/migrations/ -d ./src/database/data-source-migration.ts",
+    "typeorm:create": "npm run typeorm:cli -- migration:create ./src/database/migrations/migrations"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -34,6 +39,7 @@
     "postgres": "^3.4.4",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "ts-node-dev": "^2.0.0",
     "typeorm": "^0.3.20",
     "validation-br": "^1.5.2"
   },
